@@ -1,0 +1,87 @@
+definitions:
+  dto.PostRegisterPatientRequestDto:
+    properties:
+      address:
+        type: string
+      allergies:
+        type: string
+      blood_type:
+        enum:
+        - A-
+        - A+
+        - B-
+        - B+
+        - AB-
+        - AB+
+        - O-
+        - O+
+        - A
+        - B
+        - AB
+        - O
+        type: string
+      email:
+        type: string
+      emergency_contact:
+        type: string
+      first_name:
+        type: string
+      hospital_id:
+        type: string
+      last_name:
+        type: string
+      password:
+        minLength: 6
+        type: string
+      phone_number:
+        type: string
+    required:
+    - email
+    - first_name
+    - hospital_id
+    - last_name
+    - password
+    type: object
+  dto.PostRegisterResponseDto:
+    properties:
+      message:
+        type: string
+    type: object
+info:
+  contact: {}
+paths:
+  /api/v1/register:
+    post:
+      consumes:
+      - application/json
+      description: Create a new user patient in the system
+      parameters:
+      - description: Register request body
+        in: body
+        name: register
+        required: true
+        schema:
+          $ref: '#/definitions/dto.PostRegisterPatientRequestDto'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/dto.PostRegisterResponseDto'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Register a new patient
+      tags:
+      - User
+swagger: "2.0"
