@@ -1,8 +1,15 @@
 
+
 # Run Project
+First, start the required services using Docker Compose:
+```bash
+docker compose up -d
+```
+
+Then, run the Go application:
 ```bash
 go run cmd/api/main.go
-````
+```
 
 ### Create new migration file
 
