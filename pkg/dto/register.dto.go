@@ -6,6 +6,7 @@ type PostRegisterPatientRequestDto struct {
 	Password         string  `json:"password" validate:"required,min=6"`
 	FirstName        string  `json:"first_name" validate:"required"`
 	LastName         string  `json:"last_name" validate:"required"`
+	Gender           string  `json:"gender" validate:"required,oneof='male' 'female' 'other'"`
 	PhoneNumber      string  `json:"phone_number"`
 	Address          *string `json:"address"`
 	Allergies        *string `json:"allergies"`
