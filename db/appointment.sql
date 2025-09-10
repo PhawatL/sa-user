@@ -43,7 +43,6 @@ CREATE TABLE appointments (
   CONSTRAINT unique_patient_doctor_slot UNIQUE (patient_id, doctor_id, slot_id)
 );
 
--- FK ภายใน service เท่านั้น
 ALTER TABLE appointments
   ADD CONSTRAINT fk_appointments_slot
   FOREIGN KEY (slot_id) REFERENCES doctor_slots(id) ON DELETE SET NULL;

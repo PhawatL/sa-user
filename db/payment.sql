@@ -13,8 +13,8 @@ CREATE TABLE payment_informations (
 
 CREATE TABLE payment_attempts (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
-  order_id uuid NOT NULL,                    -- cross-service to order_service
-  payment_information_id uuid,               -- local FK optional ถ้าต้องการลบ profile แล้วเก็บ attempt ไว้ ใช้ SET NULL
+  order_id uuid NOT NULL,                    
+  payment_information_id uuid,               
   method payment_method NOT NULL,
   status payment_status NOT NULL DEFAULT 'pending',
   created_at timestamptz NOT NULL DEFAULT now(),
@@ -25,7 +25,7 @@ CREATE TABLE payments (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
   attempt_id uuid NOT NULL REFERENCES payment_attempts(id) ON DELETE CASCADE,
   amount numeric(12,2) NOT NULL CHECK (amount >= 0),
-  order_id uuid NOT NULL,                    -- cross-service
+  order_id uuid NOT NULL,                   
   paid_at timestamptz NOT NULL DEFAULT now()
 );
 
