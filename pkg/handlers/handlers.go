@@ -29,11 +29,11 @@ func NewUserHandler(userService *service.UserService) *UserHandler {
 // @Failure 400 {object} map[string]string "Bad Request"
 // @Failure 500 {object} map[string]string "Internal Server Error"
 // @Router /api/v1/register [post]
-func (h *UserHandler) Register(ctx *fiber.Ctx) error {
+func (h *UserHandler) PatientRegister(ctx *fiber.Ctx) error {
 	fmt.Println("Register endpoint hit")
-	var body dto.PostRegisterPatientRequestDto
+	var body dto.PatientRegisterPatientRequestDto
 	if err := ctx.BodyParser(&body); err != nil {
-		return response.BadRequest(ctx, "Invalid request body")
+		return response.BadRequest(ctx, "Invalid request body " + err.Error())
 	}
 
 	res, err := h.userService.Register(ctx.Context(), &body)
@@ -45,12 +45,12 @@ func (h *UserHandler) Register(ctx *fiber.Ctx) error {
 	return response.Created(ctx, res)
 }
 
-func (h *UserHandler) Login(ctx *fiber.Ctx) error {
-	var body dto.PostLoginRequestDto
+func (h *UserHandler) PatientLogin(ctx *fiber.Ctx) error {
+	var body dto.PatientLoginRequestDto
 	if err := ctx.BodyParser(&body); err != nil {
-		return response.BadRequest(ctx, "Invalid request body")
+		return response.BadRequest(ctx, "Invalid request body " + err.Error())
 	}
-	res, err := h.userService.Login(ctx.Context(), &body)
+	res, err := h.userService.PatientLogin(ctx.Context(), &body)
 	if err != nil {
 		return response.Unauthorized(ctx, err.Error())
 	}

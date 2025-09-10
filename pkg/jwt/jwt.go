@@ -13,6 +13,7 @@ type JwtService struct {
 
 type JwtClaims struct {
 	UserID string `json:"user_id"`
+	Role   string `json:"role"`
 	jwt.RegisteredClaims
 }
 
@@ -23,14 +24,15 @@ func NewJwtService(secretKey string, ttl int) *JwtService {
 	}
 }
 
-func (s *JwtService) GenerateToken(userID string) (string, error) {
+func (s *JwtService) GenerateToken(userID, role string) (string, error) {
 	// Implementation for signing the JWT
 	now := time.Now()
 	claims := JwtClaims{
 		UserID: userID,
+		Role:   role,
 		RegisteredClaims: jwt.RegisteredClaims{
-			IssuedAt:   jwt.NewNumericDate(now),
-			ExpiresAt:  jwt.NewNumericDate(now.Add(time.Duration(s.TTL) * time.Second)),
+			IssuedAt:  jwt.NewNumericDate(now),
+			ExpiresAt: jwt.NewNumericDate(now.Add(time.Duration(s.TTL) * time.Second)),
 		},
 	}
 

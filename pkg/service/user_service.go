@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"user-service/pkg/constants"
 	"user-service/pkg/dto"
 	"user-service/pkg/jwt"
 	"user-service/pkg/models"
@@ -29,17 +30,20 @@ func NewUserService(db *gorm.DB, userRepo *repository.UserRepository, patientRep
 	}
 }
 
-func (s *UserService) Register(ctx context.Context, body *dto.PostRegisterPatientRequestDto) (dto.PostRegisterResponseDto, error) {
+func (s *UserService) Register(ctx context.Context, body *dto.PatientRegisterPatientRequestDto) (*dto.PatientRegisterResponseDto, error) {
 	user := &models.User{
 		ID:          utils.GenerateUUIDv7(),
-		Email:       body.Email,
 		FirstName:   body.FirstName,
 		LastName:    body.LastName,
-		HospitalID:  body.HospitalID,
+		Gender:      body.Gender,
+		Role:        constants.RolePatient,
 		PhoneNumber: body.PhoneNumber,
 	}
 	patient := &models.Patient{
 		UserID:           user.ID,
+		HospitalID:       body.HospitalID,
+		BirthDate:        utils.ParseNullableTime(body.BirthDate),
+		IDCardNumber:     body.IDCardNumber,
 		Address:          body.Address,
 		Allergies:        body.Allergies,
 		EmergencyContact: body.EmergencyContact,
@@ -48,7 +52,7 @@ func (s *UserService) Register(ctx context.Context, body *dto.PostRegisterPatien
 
 	hashedPassword, err := utils.HashPassword(body.Password)
 	if err != nil {
-		return dto.PostRegisterResponseDto{}, err
+		return &dto.PatientRegisterResponseDto{}, err
 	}
 	user.Password = hashedPassword
 
@@ -62,36 +66,33 @@ func (s *UserService) Register(ctx context.Context, body *dto.PostRegisterPatien
 		return nil
 	})
 	if err != nil {
-		return dto.PostRegisterResponseDto{}, err
+		return &dto.PatientRegisterResponseDto{}, err
 	}
 
-	return dto.PostRegisterResponseDto{Message: "User registered successfully"}, nil
+	return &dto.PatientRegisterResponseDto{Message: "User registered successfully"}, nil
 }
 
-func (s *UserService) Login(ctx context.Context, body *dto.PostLoginRequestDto) (dto.PostLoginResponseDto, error) {
+func (s *UserService) PatientLogin(ctx context.Context, body *dto.PatientLoginRequestDto) (*dto.PatientLoginResponseDto, error) {
 
-	user, err := s.userRepository.FindByEmail(ctx, body.Email)
+	user, err := s.userRepository.FindByHospitalID(ctx, body.HospitalID)
 	if err != nil {
-		return dto.PostLoginResponseDto{}, err
+		return nil, err
 	}
-
 	if user == nil {
-		return dto.PostLoginResponseDto{}, errors.New("user not found")
+		return nil, errors.New("user not found")
 	}
-
 	ok, err := utils.VerifyPassword(body.Password, user.Password)
 	if !ok || err != nil {
 		fmt.Println(ok, err)
-		return dto.PostLoginResponseDto{}, errors.New("invalid credentials")
+		return nil, errors.New("invalid credentials")
 	}
-
 	// sign token
-	token, err := s.jwtService.GenerateToken(user.ID.String())
+	token, err := s.jwtService.GenerateToken(user.ID.String(), constants.RolePatient)
 	if err != nil {
-		return dto.PostLoginResponseDto{}, err
+		return nil, err
 	}
 	// set token in cookie
-	return dto.PostLoginResponseDto{
+	return &dto.PatientLoginResponseDto{
 		AccessToken: token,
 	}, nil
 }

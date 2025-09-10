@@ -7,7 +7,6 @@ import (
 	"gorm.io/gorm"
 )
 
-// Role type
 type Role string
 
 const (
@@ -16,48 +15,25 @@ const (
 	AdminRole   Role = "admin"
 )
 
-// User model
+
+const (
+	Male   string = "male"
+	Female string = "female"
+)
+
 type User struct {
-	ID          uuid.UUID      `gorm:"type:uuid;primary_key;" json:"id"`
-	HospitalID  string         `gorm:"not null;unique" json:"hospital_id"`
-	Email       string         `gorm:"not null;unique" json:"email"`
-	Password    string         `gorm:"not null" json:"-"`
-	FirstName   string         `gorm:"not null" json:"first_name"`
-	LastName    string         `gorm:"not null" json:"last_name"`
-	Gender      string         `gorm:"not null" json:"gender"`
-	PhoneNumber string         `json:"phone_number"`
-	CreatedAt   time.Time      `json:"created_at"`
-	UpdatedAt   time.Time      `json:"updated_at"`
-	DeletedAt   gorm.DeletedAt `gorm:"index" json:"-"`
-}
+	ID          uuid.UUID      `json:"id" gorm:"type:uuid;primary_key;default:gen_random_uuid()"`
+	Password    string         `json:"-" gorm:"not null"`
+	FirstName   string         `json:"first_name" gorm:"not null"`
+	LastName    string         `json:"last_name" gorm:"not null"`
+	Gender      string         `json:"gender" gorm:"type:gender_enum;not null"`
+	PhoneNumber string         `json:"phone_number" gorm:"not null"`
+	Role        Role           `json:"role" gorm:"type:roles;not null"`
+	CreatedAt   time.Time      `json:"created_at" gorm:"default:now()"`
+	UpdatedAt   time.Time      `json:"updated_at" gorm:"default:now()"`
+	DeletedAt   gorm.DeletedAt `json:"deleted_at,omitempty" gorm:"index"`
 
-// Patient model
-type Patient struct {
-	UserID           uuid.UUID      `gorm:"type:uuid;primary_key" json:"user_id"`
-	User             User           `gorm:"foreignKey:UserID;references:ID"`
-	Address          *string         `json:"address,omitempty"`
-	Allergies        *string         `json:"allergies,omitempty"`
-	EmergencyContact *string         `json:"emergency_contact,omitempty"`
-	BloodType        *string         `gorm:"size:5" json:"blood_type,omitempty"`
-	CreatedAt        time.Time      `json:"created_at"`
-	UpdatedAt        time.Time      `json:"updated_at"`
-	DeletedAt        gorm.DeletedAt `gorm:"index" json:"-"`
-}
-
-// Doctor model
-type Doctor struct {
-	UserID          uuid.UUID      `gorm:"type:uuid;primary_key" json:"user_id"`
-	User            User           `gorm:"foreignKey:UserID;references:ID"`
-	Specialty       string         `json:"specialty,omitempty"`
-	Bio             string         `json:"bio,omitempty"`
-	YearsExperience int            `json:"years_experience,omitempty"`
-	CreatedAt       time.Time      `json:"created_at"`
-	UpdatedAt       time.Time      `json:"updated_at"`
-	DeletedAt       gorm.DeletedAt `gorm:"index" json:"-"`
-}
-
-type UserRole struct {
-	UserID uuid.UUID `gorm:"type:uuid;primary_key" json:"user_id"`
-	User   User      `gorm:"foreignKey:UserID;references:ID"`
-	Role   Role      `gorm:"type:roles;primary_key" json:"role"`
+	Patient *Patient `json:"patient,omitempty" gorm:"foreignKey:UserID"`
+	Doctor  *Doctor  `json:"doctor,omitempty" gorm:"foreignKey:UserID"`
+	Admin   *Admin   `json:"admin,omitempty" gorm:"foreignKey:UserID"`
 }

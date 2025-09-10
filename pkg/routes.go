@@ -19,8 +19,8 @@ func SetupRoutes(app *fiber.App, userHandler *handlers.UserHandler, jwtSvc *jwt.
 	}))
 	v1 := api.Group("/v1")
 	v1.Post("/register",
-		userHandler.Register)
-	v1.Post("/login", userHandler.Login)
+		userHandler.PatientRegister)
+	v1.Post("/login", userHandler.PatientLogin)
 	v1.Use(middleware.JwtMiddleware(jwtSvc))
 	v1.Get("/profile", userHandler.Profile)
 

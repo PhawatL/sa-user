@@ -25,6 +25,7 @@ func JwtMiddleware(jwtService *jwt.JwtService) fiber.Handler {
 
 		// ผูก context ให้ handler ถัดไป
 		c.Locals("userID", claims.UserID)
+		c.Locals("role", claims.Role)
 		// ใส่ scopes/roles ถ้าจำเป็น: c.Locals("scopes", claims.Scopes)
 
 		return c.Next()
