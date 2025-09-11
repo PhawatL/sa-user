@@ -16,11 +16,12 @@ func SetupRoutes(app *fiber.App, userHandler *handlers.UserHandler, jwtSvc *jwt.
 
 	api := app.Group("/api")
 	api.Get("/swagger/*", swagger.HandlerDefault)
-	v1 := api.Group("/v1")
-	v1.Post("/register",
+	user := api.Group("/user")
+	v1 := user.Group("/v1")
+	v1.Post("/patient/register",
 		userHandler.PatientRegister)
-	v1.Post("/login", userHandler.PatientLogin)
+	v1.Post("/patient/login", userHandler.PatientLogin)
 	v1.Use(middleware.JwtMiddleware(jwtSvc))
-	v1.Get("/profile", userHandler.Profile)
+	v1.Get("/patient/me", userHandler.Profile)
 
 }

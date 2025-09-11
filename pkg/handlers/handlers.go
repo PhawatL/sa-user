@@ -29,7 +29,7 @@ func NewUserHandler(userService *service.UserService) *UserHandler {
 // @Success 201 {object} dto.PatientRegisterResponseDto "Patient registered successfully"
 // @Failure 400 {object} response.ErrorResponse "Invalid request body"
 // @Failure 500 {object} response.ErrorResponse "Failed to register user"
-// @Router /api/user/patient/register [post]
+// @Router /api/user/v1/patient/register [post]
 func (h *UserHandler) PatientRegister(ctx *fiber.Ctx) error {
 	fmt.Println("Register endpoint hit")
 	var body dto.PatientRegisterPatientRequestDto
@@ -56,7 +56,7 @@ func (h *UserHandler) PatientRegister(ctx *fiber.Ctx) error {
 // @Success 200 {object} dto.PatientLoginResponseDto "Patient logged in successfully"
 // @Failure 400 {object} response.ErrorResponse "Invalid request body"
 // @Failure 401 {object} response.ErrorResponse "Invalid credentials"
-// @Router /api/user/patient/login [post]
+// @Router /api/user/v1/patient/login [post]
 func (h *UserHandler) PatientLogin(ctx *fiber.Ctx) error {
 	var body dto.PatientLoginRequestDto
 	if err := ctx.BodyParser(&body); err != nil {
@@ -84,7 +84,7 @@ func (h *UserHandler) PatientLogin(ctx *fiber.Ctx) error {
 // @Success 200 {object} dto.GetProfileResponseDto "Profile retrieved successfully"
 // @Failure 401 {object} response.ErrorResponse "Unauthorized - Invalid or missing token"
 // @Failure 500 {object} response.ErrorResponse "Failed to get user profile"
-// @Router /api/user/patient/profile [get]
+// @Router /api/user/v1/patient/me [get]
 func (h *UserHandler) Profile(ctx *fiber.Ctx) error {
 	userID := ctx.Locals("userID").(string)
 	fmt.Println("Profile endpoint hit, userID:", userID)
