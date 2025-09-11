@@ -15,9 +15,9 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/api/v1/register": {
+        "/patient/register": {
             "post": {
-                "description": "Create a new user patient in the system",
+                "description": "Register a new patient in the system",
                 "consumes": [
                     "application/json"
                 ],
@@ -25,43 +25,37 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "User"
+                    "patients"
                 ],
                 "summary": "Register a new patient",
                 "parameters": [
                     {
-                        "description": "Register request body",
-                        "name": "register",
+                        "description": "Patient registration data",
+                        "name": "patient",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/dto.PostRegisterPatientRequestDto"
+                            "$ref": "#/definitions/dto.PatientRegisterPatientRequestDto"
                         }
                     }
                 ],
                 "responses": {
                     "201": {
-                        "description": "Created",
+                        "description": "Patient registered successfully",
                         "schema": {
-                            "$ref": "#/definitions/dto.PostRegisterResponseDto"
+                            "$ref": "#/definitions/dto.PatientRegisterResponseDto"
                         }
                     },
                     "400": {
-                        "description": "Bad Request",
+                        "description": "Invalid request body",
                         "schema": {
-                            "type": "object",
-                            "additionalProperties": {
-                                "type": "string"
-                            }
+                            "$ref": "#/definitions/response.ErrorResponse"
                         }
                     },
                     "500": {
-                        "description": "Internal Server Error",
+                        "description": "Failed to register user",
                         "schema": {
-                            "type": "object",
-                            "additionalProperties": {
-                                "type": "string"
-                            }
+                            "$ref": "#/definitions/response.ErrorResponse"
                         }
                     }
                 }
@@ -69,11 +63,11 @@ const docTemplate = `{
         }
     },
     "definitions": {
-        "dto.PostRegisterPatientRequestDto": {
+        "dto.PatientRegisterPatientRequestDto": {
             "type": "object",
             "required": [
-                "email",
                 "first_name",
+                "gender",
                 "hospital_id",
                 "last_name",
                 "password"
@@ -85,24 +79,10 @@ const docTemplate = `{
                 "allergies": {
                     "type": "string"
                 },
-                "blood_type": {
-                    "type": "string",
-                    "enum": [
-                        "A-",
-                        "A+",
-                        "B-",
-                        "B+",
-                        "AB-",
-                        "AB+",
-                        "O-",
-                        "O+",
-                        "A",
-                        "B",
-                        "AB",
-                        "O"
-                    ]
+                "birth_date": {
+                    "type": "string"
                 },
-                "email": {
+                "blood_type": {
                     "type": "string"
                 },
                 "emergency_contact": {
@@ -111,7 +91,19 @@ const docTemplate = `{
                 "first_name": {
                     "type": "string"
                 },
+                "gender": {
+                    "type": "string",
+                    "enum": [
+                        "male",
+                        "female",
+                        "other"
+                    ]
+                },
                 "hospital_id": {
+                    "description": "Patient specific fields",
+                    "type": "string"
+                },
+                "id_card_number": {
                     "type": "string"
                 },
                 "last_name": {
@@ -126,10 +118,18 @@ const docTemplate = `{
                 }
             }
         },
-        "dto.PostRegisterResponseDto": {
+        "dto.PatientRegisterResponseDto": {
             "type": "object",
             "properties": {
                 "message": {
+                    "type": "string"
+                }
+            }
+        },
+        "response.ErrorResponse": {
+            "type": "object",
+            "properties": {
+                "error": {
                     "type": "string"
                 }
             }
@@ -139,12 +139,12 @@ const docTemplate = `{
 
 // SwaggerInfo holds exported Swagger Info so clients can modify it
 var SwaggerInfo = &swag.Spec{
-	Version:          "",
-	Host:             "",
-	BasePath:         "",
-	Schemes:          []string{},
-	Title:            "",
-	Description:      "",
+	Version:          "1.0",
+	Host:             "localhost:8080",
+	BasePath:         "/",
+	Schemes:          []string{"http"},
+	Title:            "User API",
+	Description:      "This is a sample server for a user API.",
 	InfoInstanceName: "swagger",
 	SwaggerTemplate:  docTemplate,
 	LeftDelim:        "{{",

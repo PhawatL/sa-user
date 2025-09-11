@@ -8,7 +8,7 @@ docker compose up -d
 
 Then, run the Go application:
 ```bash
-go run cmd/api/main.go
+go run main.go
 ```
 
 ### Create new migration file
@@ -16,8 +16,6 @@ go run cmd/api/main.go
 ```bash
 goose create <table-name> sql
 ```
-
-
 
 ## Database Migration with Goose
 

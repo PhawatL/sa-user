@@ -6,6 +6,10 @@ type BaseResponse struct {
 	Data interface{} `json:"data,omitempty"`
 }
 
+type ErrorResponse struct {
+	Error string `json:"error"`
+}
+
 func OK[T any](c *fiber.Ctx, data T) error {
 	return c.Status(fiber.StatusOK).JSON(data)
 }

@@ -1,12 +1,20 @@
 {
+    "schemes": [
+        "http"
+    ],
     "swagger": "2.0",
     "info": {
-        "contact": {}
+        "description": "This is a sample server for a user API.",
+        "title": "User API",
+        "contact": {},
+        "version": "1.0"
     },
+    "host": "localhost:8080",
+    "basePath": "/",
     "paths": {
-        "/api/v1/register": {
+        "/patient/register": {
             "post": {
-                "description": "Create a new user patient in the system",
+                "description": "Register a new patient in the system",
                 "consumes": [
                     "application/json"
                 ],
@@ -14,43 +22,37 @@
                     "application/json"
                 ],
                 "tags": [
-                    "User"
+                    "patients"
                 ],
                 "summary": "Register a new patient",
                 "parameters": [
                     {
-                        "description": "Register request body",
-                        "name": "register",
+                        "description": "Patient registration data",
+                        "name": "patient",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/dto.PostRegisterPatientRequestDto"
+                            "$ref": "#/definitions/dto.PatientRegisterPatientRequestDto"
                         }
                     }
                 ],
                 "responses": {
                     "201": {
-                        "description": "Created",
+                        "description": "Patient registered successfully",
                         "schema": {
-                            "$ref": "#/definitions/dto.PostRegisterResponseDto"
+                            "$ref": "#/definitions/dto.PatientRegisterResponseDto"
                         }
                     },
                     "400": {
-                        "description": "Bad Request",
+                        "description": "Invalid request body",
                         "schema": {
-                            "type": "object",
-                            "additionalProperties": {
-                                "type": "string"
-                            }
+                            "$ref": "#/definitions/response.ErrorResponse"
                         }
                     },
                     "500": {
-                        "description": "Internal Server Error",
+                        "description": "Failed to register user",
                         "schema": {
-                            "type": "object",
-                            "additionalProperties": {
-                                "type": "string"
-                            }
+                            "$ref": "#/definitions/response.ErrorResponse"
                         }
                     }
                 }
@@ -58,11 +60,11 @@
         }
     },
     "definitions": {
-        "dto.PostRegisterPatientRequestDto": {
+        "dto.PatientRegisterPatientRequestDto": {
             "type": "object",
             "required": [
-                "email",
                 "first_name",
+                "gender",
                 "hospital_id",
                 "last_name",
                 "password"
@@ -74,24 +76,10 @@
                 "allergies": {
                     "type": "string"
                 },
-                "blood_type": {
-                    "type": "string",
-                    "enum": [
-                        "A-",
-                        "A+",
-                        "B-",
-                        "B+",
-                        "AB-",
-                        "AB+",
-                        "O-",
-                        "O+",
-                        "A",
-                        "B",
-                        "AB",
-                        "O"
-                    ]
+                "birth_date": {
+                    "type": "string"
                 },
-                "email": {
+                "blood_type": {
                     "type": "string"
                 },
                 "emergency_contact": {
@@ -100,7 +88,19 @@
                 "first_name": {
                     "type": "string"
                 },
+                "gender": {
+                    "type": "string",
+                    "enum": [
+                        "male",
+                        "female",
+                        "other"
+                    ]
+                },
                 "hospital_id": {
+                    "description": "Patient specific fields",
+                    "type": "string"
+                },
+                "id_card_number": {
                     "type": "string"
                 },
                 "last_name": {
@@ -115,10 +115,18 @@
                 }
             }
         },
-        "dto.PostRegisterResponseDto": {
+        "dto.PatientRegisterResponseDto": {
             "type": "object",
             "properties": {
                 "message": {
+                    "type": "string"
+                }
+            }
+        },
+        "response.ErrorResponse": {
+            "type": "object",
+            "properties": {
+                "error": {
                     "type": "string"
                 }
             }

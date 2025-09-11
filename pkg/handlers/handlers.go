@@ -18,22 +18,23 @@ func NewUserHandler(userService *service.UserService) *UserHandler {
 		userService: userService}
 }
 
-// Register godoc
+// Handler functions
+// PatientRegister godoc
 // @Summary Register a new patient
-// @Description Create a new user patient in the system
-// @Tags User
-// @Accept json
-// @Produce json
-// @Param register body dto.PostRegisterPatientRequestDto true "Register request body"
-// @Success 201 {object} dto.PostRegisterResponseDto
-// @Failure 400 {object} map[string]string "Bad Request"
-// @Failure 500 {object} map[string]string "Internal Server Error"
-// @Router /api/v1/register [post]
+// @Description Register a new patient in the system
+// @Tags patients
+// @Accept  json
+// @Produce  json
+// @Param patient body dto.PatientRegisterPatientRequestDto true "Patient registration data"
+// @Success 201 {object} dto.PatientRegisterResponseDto "Patient registered successfully"
+// @Failure 400 {object} response.ErrorResponse "Invalid request body"
+// @Failure 500 {object} response.ErrorResponse "Failed to register user"
+// @Router /patient/register [post]
 func (h *UserHandler) PatientRegister(ctx *fiber.Ctx) error {
 	fmt.Println("Register endpoint hit")
 	var body dto.PatientRegisterPatientRequestDto
 	if err := ctx.BodyParser(&body); err != nil {
-		return response.BadRequest(ctx, "Invalid request body " + err.Error())
+		return response.BadRequest(ctx, "Invalid request body "+err.Error())
 	}
 
 	res, err := h.userService.Register(ctx.Context(), &body)
@@ -48,7 +49,7 @@ func (h *UserHandler) PatientRegister(ctx *fiber.Ctx) error {
 func (h *UserHandler) PatientLogin(ctx *fiber.Ctx) error {
 	var body dto.PatientLoginRequestDto
 	if err := ctx.BodyParser(&body); err != nil {
-		return response.BadRequest(ctx, "Invalid request body " + err.Error())
+		return response.BadRequest(ctx, "Invalid request body "+err.Error())
 	}
 	res, err := h.userService.PatientLogin(ctx.Context(), &body)
 	if err != nil {

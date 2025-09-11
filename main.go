@@ -20,6 +20,15 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
+
+// @title User API
+// @description This is a sample server for a user API.
+// @version 1.0
+// @host localhost:8080
+// @BasePath /
+// @schemes http
+// @in header
+// @name Authorization
 func main() {
 	os.Setenv("TZ", "Asia/Bangkok")
 	config.LoadConfig()

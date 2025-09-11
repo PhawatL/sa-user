@@ -1,32 +1,29 @@
+basePath: /
 definitions:
-  dto.PostRegisterPatientRequestDto:
+  dto.PatientRegisterPatientRequestDto:
     properties:
       address:
         type: string
       allergies:
         type: string
-      blood_type:
-        enum:
-        - A-
-        - A+
-        - B-
-        - B+
-        - AB-
-        - AB+
-        - O-
-        - O+
-        - A
-        - B
-        - AB
-        - O
+      birth_date:
         type: string
-      email:
+      blood_type:
         type: string
       emergency_contact:
         type: string
       first_name:
         type: string
+      gender:
+        enum:
+        - male
+        - female
+        - other
+        type: string
       hospital_id:
+        description: Patient specific fields
+        type: string
+      id_card_number:
         type: string
       last_name:
         type: string
@@ -36,52 +33,59 @@ definitions:
       phone_number:
         type: string
     required:
-    - email
     - first_name
+    - gender
     - hospital_id
     - last_name
     - password
     type: object
-  dto.PostRegisterResponseDto:
+  dto.PatientRegisterResponseDto:
     properties:
       message:
         type: string
     type: object
+  response.ErrorResponse:
+    properties:
+      error:
+        type: string
+    type: object
+host: localhost:8080
 info:
   contact: {}
+  description: This is a sample server for a user API.
+  title: User API
+  version: "1.0"
 paths:
-  /api/v1/register:
+  /patient/register:
     post:
       consumes:
       - application/json
-      description: Create a new user patient in the system
+      description: Register a new patient in the system
       parameters:
-      - description: Register request body
+      - description: Patient registration data
         in: body
-        name: register
+        name: patient
         required: true
         schema:
-          $ref: '#/definitions/dto.PostRegisterPatientRequestDto'
+          $ref: '#/definitions/dto.PatientRegisterPatientRequestDto'
       produces:
       - application/json
       responses:
         "201":
-          description: Created
+          description: Patient registered successfully
           schema:
-            $ref: '#/definitions/dto.PostRegisterResponseDto'
+            $ref: '#/definitions/dto.PatientRegisterResponseDto'
         "400":
-          description: Bad Request
+          description: Invalid request body
           schema:
-            additionalProperties:
-              type: string
-            type: object
+            $ref: '#/definitions/response.ErrorResponse'
         "500":
-          description: Internal Server Error
+          description: Failed to register user
           schema:
-            additionalProperties:
-              type: string
-            type: object
+            $ref: '#/definitions/response.ErrorResponse'
       summary: Register a new patient
       tags:
-      - User
+      - patients
+schemes:
+- http
 swagger: "2.0"

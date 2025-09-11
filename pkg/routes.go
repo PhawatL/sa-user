@@ -3,6 +3,7 @@ package routes
 import (
 	// "user-service/pkg/context"
 	// "user-service/pkg/dto"
+	_ "user-service/docs"
 	"user-service/pkg/handlers"
 	"user-service/pkg/jwt"
 	"user-service/pkg/middleware"
@@ -14,9 +15,7 @@ import (
 func SetupRoutes(app *fiber.App, userHandler *handlers.UserHandler, jwtSvc *jwt.JwtService) {
 
 	api := app.Group("/api")
-	api.Get("/swagger/*", swagger.New(swagger.Config{
-		URL: "/swagger/doc.json", // The url pointing to API definition
-	}))
+	api.Get("/swagger/*", swagger.HandlerDefault)
 	v1 := api.Group("/v1")
 	v1.Post("/register",
 		userHandler.PatientRegister)
