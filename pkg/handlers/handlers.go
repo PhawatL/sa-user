@@ -46,6 +46,17 @@ func (h *UserHandler) PatientRegister(ctx *fiber.Ctx) error {
 	return response.Created(ctx, res)
 }
 
+// PatientLogin godoc
+// @Summary Login a patient
+// @Description Authenticate a patient and return access token
+// @Tags patients
+// @Accept  json
+// @Produce  json
+// @Param patient body dto.PatientLoginRequestDto true "Patient login credentials"
+// @Success 200 {object} dto.PatientLoginResponseDto "Patient logged in successfully"
+// @Failure 400 {object} response.ErrorResponse "Invalid request body"
+// @Failure 401 {object} response.ErrorResponse "Invalid credentials"
+// @Router /patient/login [post]
 func (h *UserHandler) PatientLogin(ctx *fiber.Ctx) error {
 	var body dto.PatientLoginRequestDto
 	if err := ctx.BodyParser(&body); err != nil {
@@ -63,6 +74,17 @@ func (h *UserHandler) PatientLogin(ctx *fiber.Ctx) error {
 	return response.OK(ctx, res)
 }
 
+// Profile godoc
+// @Summary Get patient profile
+// @Description Get the profile information of the authenticated patient
+// @Tags patients
+// @Accept  json
+// @Produce  json
+// @Security ApiKeyAuth
+// @Success 200 {object} dto.GetProfileResponseDto "Profile retrieved successfully"
+// @Failure 401 {object} response.ErrorResponse "Unauthorized - Invalid or missing token"
+// @Failure 500 {object} response.ErrorResponse "Failed to get user profile"
+// @Router /patient/profile [get]
 func (h *UserHandler) Profile(ctx *fiber.Ctx) error {
 	userID := ctx.Locals("userID").(string)
 	fmt.Println("Profile endpoint hit, userID:", userID)

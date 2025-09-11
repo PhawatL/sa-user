@@ -1,5 +1,24 @@
 basePath: /
 definitions:
+  dto.GetProfileResponseDto:
+    properties:
+      email:
+        type: string
+      user_id:
+        type: string
+    type: object
+  dto.PatientLoginRequestDto:
+    properties:
+      hospital_id:
+        type: string
+      password:
+        type: string
+    type: object
+  dto.PatientLoginResponseDto:
+    properties:
+      access_token:
+        type: string
+    type: object
   dto.PatientRegisterPatientRequestDto:
     properties:
       address:
@@ -56,6 +75,61 @@ info:
   title: User API
   version: "1.0"
 paths:
+  /patient/login:
+    post:
+      consumes:
+      - application/json
+      description: Authenticate a patient and return access token
+      parameters:
+      - description: Patient login credentials
+        in: body
+        name: patient
+        required: true
+        schema:
+          $ref: '#/definitions/dto.PatientLoginRequestDto'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Patient logged in successfully
+          schema:
+            $ref: '#/definitions/dto.PatientLoginResponseDto'
+        "400":
+          description: Invalid request body
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "401":
+          description: Invalid credentials
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+      summary: Login a patient
+      tags:
+      - patients
+  /patient/profile:
+    get:
+      consumes:
+      - application/json
+      description: Get the profile information of the authenticated patient
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Profile retrieved successfully
+          schema:
+            $ref: '#/definitions/dto.GetProfileResponseDto'
+        "401":
+          description: Unauthorized - Invalid or missing token
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "500":
+          description: Failed to get user profile
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Get patient profile
+      tags:
+      - patients
   /patient/register:
     post:
       consumes:
@@ -88,4 +162,10 @@ paths:
       - patients
 schemes:
 - http
+securityDefinitions:
+  ApiKeyAuth:
+    description: Type "Bearer" followed by a space and JWT token.
+    in: header
+    name: Authorization
+    type: apiKey
 swagger: "2.0"
