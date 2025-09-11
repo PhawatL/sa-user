@@ -15,7 +15,7 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/patient/login": {
+        "/api/user/v1/patient/login": {
             "post": {
                 "description": "Authenticate a patient and return access token",
                 "consumes": [
@@ -61,7 +61,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/patient/profile": {
+        "/api/user/v1/patient/me": {
             "get": {
                 "security": [
                     {
@@ -101,7 +101,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/patient/register": {
+        "/api/user/v1/patient/register": {
             "post": {
                 "description": "Register a new patient in the system",
                 "consumes": [

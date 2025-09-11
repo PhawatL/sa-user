@@ -12,7 +12,7 @@
     "host": "localhost:8080",
     "basePath": "/",
     "paths": {
-        "/patient/login": {
+        "/api/user/v1/patient/login": {
             "post": {
                 "description": "Authenticate a patient and return access token",
                 "consumes": [
@@ -58,7 +58,7 @@
                 }
             }
         },
-        "/patient/profile": {
+        "/api/user/v1/patient/me": {
             "get": {
                 "security": [
                     {
@@ -98,7 +98,7 @@
                 }
             }
         },
-        "/patient/register": {
+        "/api/user/v1/patient/register": {
             "post": {
                 "description": "Register a new patient in the system",
                 "consumes": [

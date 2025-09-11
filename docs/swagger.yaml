@@ -75,7 +75,7 @@ info:
   title: User API
   version: "1.0"
 paths:
-  /patient/login:
+  /api/user/v1/patient/login:
     post:
       consumes:
       - application/json
@@ -105,7 +105,7 @@ paths:
       summary: Login a patient
       tags:
       - patients
-  /patient/profile:
+  /api/user/v1/patient/me:
     get:
       consumes:
       - application/json
@@ -130,7 +130,7 @@ paths:
       summary: Get patient profile
       tags:
       - patients
-  /patient/register:
+  /api/user/v1/patient/register:
     post:
       consumes:
       - application/json
