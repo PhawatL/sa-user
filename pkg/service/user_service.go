@@ -49,6 +49,7 @@ func (s *UserService) Register(ctx context.Context, body *dto.PatientRegisterPat
 		EmergencyContact: body.EmergencyContact,
 		BloodType:        body.BloodType,
 	}
+	fmt.Println("Hello From service Update")
 
 	hashedPassword, err := utils.HashPassword(body.Password)
 	if err != nil {
@@ -103,4 +104,37 @@ func (s *UserService) GetProfileByID(ctx context.Context, userID string) (*model
 		return nil, err
 	}
 	return user, nil
+}
+
+func (s *UserService) UpdatePatientProfile(ctx context.Context, userID string, role string, body *dto.PatientUpdateProfileRequestDto) (*dto.PatientUpdateProfileResponeDto, error) {
+	if role != "patient" {
+		return &dto.PatientUpdateProfileResponeDto{}, nil
+	}
+
+	user := &models.User{
+		FirstName:   body.FirstName,
+		LastName:    body.LastName,
+		PhoneNumber: body.PhoneNumber,
+	}
+	patient := &models.Patient{
+		Address:          body.Address,
+		Allergies:        body.Allergies,
+		EmergencyContact: body.EmergencyContact,
+	}
+
+	fmt.Println("Hello from service update.")
+
+	if err := s.db.WithContext(ctx).Transaction(func(tx *gorm.DB) error {
+		if err := s.userRepository.UpdateUser(ctx, userID, user); err != nil {
+			return err
+		}
+		if err := s.patientRepository.UpdatePatient(ctx, userID, patient); err != nil {
+			return err
+		}
+		return nil
+	}); err != nil {
+		return &dto.PatientUpdateProfileResponeDto{}, err
+	}
+
+	return &dto.PatientUpdateProfileResponeDto{Message: "User updated successfully"}, nil
 }

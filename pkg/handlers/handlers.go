@@ -94,3 +94,21 @@ func (h *UserHandler) Profile(ctx *fiber.Ctx) error {
 	}
 	return response.OK(ctx, user)
 }
+
+func (h *UserHandler) UpdatePatientProfile(ctx *fiber.Ctx) error {
+	userID := ctx.Locals("userID").(string)
+	role := ctx.Locals("role").(string)
+	var body dto.PatientUpdateProfileRequestDto
+	fmt.Println("Hello From handler Update Print body", body)
+	if err := ctx.BodyParser(&body); err != nil {
+		return response.BadRequest(ctx, "Invalid request body "+err.Error())
+	}
+
+	res, err := h.userService.UpdatePatientProfile(ctx.Context(), userID, role, &body)
+
+	if err != nil {
+		return response.InternalServerError(ctx, "Failed to update user: "+err.Error())
+	}
+
+	return response.OK(ctx, res)
+}

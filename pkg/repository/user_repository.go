@@ -66,3 +66,10 @@ func (r *UserRepository) Create(ctx context.Context, user *models.User) error {
 func (r *UserRepository) CreateTx(tx *gorm.DB, u *models.User) error {
 	return tx.Create(u).Error
 }
+
+func (r *UserRepository) UpdateUser(ctx context.Context, id string, user *models.User) error {
+	if err := r.db.WithContext(ctx).Where("id = ?", id).Updates(user).Error; err != nil {
+		return err
+	}
+	return nil
+}

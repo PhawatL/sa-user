@@ -44,3 +44,10 @@ func (r *PatientRepository) Create(ctx context.Context, patient *models.Patient)
 func (r *PatientRepository) CreateTx(tx *gorm.DB, p *models.Patient) error {
 	return tx.Create(p).Error
 }
+
+func (r *PatientRepository) UpdatePatient(ctx context.Context, id string, patient *models.Patient) error {
+	if err := r.db.WithContext(ctx).Where("user_id = ?", id).Updates(patient).Error; err != nil {
+		return err
+	}
+	return nil
+}
