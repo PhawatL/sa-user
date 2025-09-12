@@ -42,7 +42,7 @@ func (s *UserService) Register(ctx context.Context, body *dto.PatientRegisterPat
 	patient := &models.Patient{
 		UserID:           user.ID,
 		HospitalID:       body.HospitalID,
-		BirthDate:        utils.ParseNullableTime(body.BirthDate),
+		BirthDate:        body.BirthDate,
 		IDCardNumber:     body.IDCardNumber,
 		Address:          body.Address,
 		Allergies:        body.Allergies,
@@ -97,10 +97,23 @@ func (s *UserService) PatientLogin(ctx context.Context, body *dto.PatientLoginRe
 	}, nil
 }
 
-func (s *UserService) GetProfileByID(ctx context.Context, userID string) (*models.User, error) {
-	user, err := s.userRepository.FindByID(ctx, userID)
+func (s *UserService) GetProfileByID(ctx context.Context, userID string) (*dto.GetProfileResponseDto, error) {
+	user, err := s.userRepository.FindPatientByID(ctx, userID)
+	res := &dto.GetProfileResponseDto{
+		FirstName:        user.FirstName,
+		LastName:         user.LastName,
+		Gender:           user.Gender,
+		PhoneNumber:      user.PhoneNumber,
+		HospitalID:       user.Patient.HospitalID,
+		BirthDate:        user.Patient.BirthDate,
+		IDCardNumber:     user.Patient.IDCardNumber,
+		Address:          user.Patient.Address,
+		Allergies:        user.Patient.Allergies,
+		EmergencyContact: user.Patient.EmergencyContact,
+		BloodType:        user.Patient.BloodType,
+	}
 	if err != nil {
 		return nil, err
 	}
-	return user, nil
+	return res, nil
 }

@@ -7,12 +7,12 @@ import (
 	"io"
 	"os"
 	"reflect"
+	"user-service/cmd"
 	routes "user-service/pkg"
 	"user-service/pkg/config"
 	"user-service/pkg/db"
 	"user-service/pkg/handlers"
 	"user-service/pkg/jwt"
-	"user-service/pkg/models"
 	"user-service/pkg/repository"
 	"user-service/pkg/service"
 
@@ -41,7 +41,7 @@ func main() {
 		Dbname:   config.Get("DB_NAME", "userdb"),
 		Sslmode:  config.Get("DB_SSLMODE", "disable"),
 	})
-	db.AutoMigrate(&models.User{})
+	cmd.InitCmd()
 	userRepository := repository.NewUserRepository(db)
 	patientRepository := repository.NewPatientRepository(db)
 	jwtService := jwt.NewJwtService(

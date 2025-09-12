@@ -152,10 +152,37 @@ const docTemplate = `{
         "dto.GetProfileResponseDto": {
             "type": "object",
             "properties": {
-                "email": {
+                "address": {
                     "type": "string"
                 },
-                "user_id": {
+                "allergies": {
+                    "type": "string"
+                },
+                "birth_date": {
+                    "type": "string"
+                },
+                "blood_type": {
+                    "type": "string"
+                },
+                "emergency_contact": {
+                    "type": "string"
+                },
+                "first_name": {
+                    "type": "string"
+                },
+                "gender": {
+                    "type": "string"
+                },
+                "hospital_id": {
+                    "type": "string"
+                },
+                "id_card_number": {
+                    "type": "string"
+                },
+                "last_name": {
+                    "type": "string"
+                },
+                "phone_number": {
                     "type": "string"
                 }
             }
