@@ -1,6 +1,20 @@
 
 
 # Run Project
+### Setup Project
+
+Install dependencies:
+
+```bash
+go mod tidy
+```
+
+Install Goose and Swag CLI tools:
+
+```bash
+go install github.com/pressly/goose/v3/cmd/goose@latest
+go install github.com/swaggo/swag/cmd/swag@latest
+```
 First, start the required services using Docker Compose:
 ```bash
 docker compose up -d
