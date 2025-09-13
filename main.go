@@ -43,12 +43,11 @@ func main() {
 	})
 	cmd.InitCmd()
 	userRepository := repository.NewUserRepository(db)
-	patientRepository := repository.NewPatientRepository(db)
 	jwtService := jwt.NewJwtService(
 		config.Get("JWT_SECRET", "secret"),
 		config.GetInt("JWT_TTL", 3600),
 	)
-	userService := service.NewUserService(db, userRepository, patientRepository, jwtService)
+	userService := service.NewUserService(db, userRepository, jwtService)
 	userHandler := handlers.NewUserHandler(userService)
 
 	app := fiber.New(fiber.Config{

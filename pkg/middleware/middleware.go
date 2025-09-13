@@ -19,7 +19,7 @@ func JwtMiddleware(jwtService *jwt.JwtService) fiber.Handler {
 		claims, err := jwtService.Parse(token)
 		if err != nil {
 			return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
-				"error": "Invalid JWT",
+				"error": "Invalid token",
 			})
 		}
 

@@ -17,15 +17,13 @@ import (
 type UserService struct {
 	db                *gorm.DB
 	userRepository    *repository.UserRepository
-	patientRepository *repository.PatientRepository
 	jwtService        *jwt.JwtService
 }
 
-func NewUserService(db *gorm.DB, userRepo *repository.UserRepository, patientRepo *repository.PatientRepository, jwtService *jwt.JwtService) *UserService {
+func NewUserService(db *gorm.DB, userRepo *repository.UserRepository, jwtService *jwt.JwtService) *UserService {
 	return &UserService{
 		db:                db,
 		userRepository:    userRepo,
-		patientRepository: patientRepo,
 		jwtService:        jwtService,
 	}
 }
@@ -56,15 +54,16 @@ func (s *UserService) Register(ctx context.Context, body *dto.PatientRegisterPat
 	}
 	user.Password = hashedPassword
 
-	err = s.db.WithContext(ctx).Transaction(func(tx *gorm.DB) error {
-		if err := s.userRepository.CreateTx(tx, user); err != nil {
+	err = s.userRepository.Transaction(ctx, func(repo *repository.UserRepository) error {
+		if err := repo.CreateUser(ctx, user); err != nil {
 			return err
 		}
-		if err := s.patientRepository.CreateTx(tx, patient); err != nil {
+		if err := repo.CreatePatient(ctx, patient); err != nil {
 			return err
 		}
 		return nil
 	})
+	
 	if err != nil {
 		return &dto.PatientRegisterResponseDto{}, err
 	}
