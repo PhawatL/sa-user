@@ -8,12 +8,12 @@ import (
 	"os"
 	"reflect"
 	"user-service/cmd"
-	routes "user-service/pkg"
 	"user-service/pkg/config"
 	"user-service/pkg/db"
 	"user-service/pkg/handlers"
 	"user-service/pkg/jwt"
 	"user-service/pkg/repository"
+	"user-service/pkg/routes"
 	"user-service/pkg/service"
 
 	"github.com/go-playground/validator/v10"
